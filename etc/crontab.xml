@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Cron job configuration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="ai_stockpredict_forecast"
+             instance="AI\StockPredict\Cron\RunForecast"
+             method="execute">
+            <schedule>0 2 * * *</schedule>
+        </job>
+        <job name="ai_stockpredict_cleanup"
+             instance="AI\StockPredict\Cron\Cleanup"
+             method="execute">
+            <schedule>0 3 * * *</schedule>
+        </job>
+    </group>
+</config>

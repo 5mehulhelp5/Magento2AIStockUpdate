@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * System configuration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ai_stockpredict" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>StockPredict</label>
+            <tab>general</tab>
+            <resource>AI_StockPredict::config</resource>
+
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/disable StockPredict inventory forecasting</comment>
+                </field>
+                <field id="enable_logging" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Log forecast details to var/log/ai_stockpredict.log</comment>
+                </field>
+                <field id="retention_days" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Data Retention (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of days to keep forecast data (default: 90)</comment>
+                </field>
+            </group>
+
+            <group id="forecasting" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Forecasting Settings</label>
+                <field id="history_days" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sales History Days</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of historical days to use for forecast calculations (default: 365)</comment>
+                </field>
+                <field id="forecast_horizon" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Forecast Horizon (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Number of days to forecast ahead: 30, 60, or 90 (default: 30)</comment>
+                </field>
+                <field id="min_order_threshold" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Minimum Order Threshold</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Minimum orders required before forecasting a SKU (default: 5)</comment>
+                </field>
+            </group>
+
+            <group id="alerts" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Alert Thresholds</label>
+                <field id="critical_days" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Critical Alert (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Days until stockout threshold for CRITICAL severity (default: 7)</comment>
+                </field>
+                <field id="warning_days" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Warning Alert (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Days until stockout threshold for WARNING severity (default: 14)</comment>
+                </field>
+                <field id="watch_days" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Watch Alert (Days)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>Days until stockout threshold for WATCH severity (default: 30)</comment>
+                </field>
+                <field id="email_enabled" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Email Alerts</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Send email notifications when critical/warning alerts are created</comment>
+                </field>
+                <field id="email_recipient" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alert Email Recipient</label>
+                    <validate>validate-email</validate>
+                    <comment>Email address to receive stockout alerts</comment>
+                    <depends>
+                        <field id="email_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="ai" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>AI Configuration</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable AI Analysis</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable AI-powered demand forecasting and reorder recommendations</comment>
+                </field>
+                <field id="provider" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>AI Provider</label>
+                    <source_model>AI\StockPredict\Model\Config\Source\AiProvider</source_model>
+                    <comment>Select AI provider for demand forecasting</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="api_key" translate="label comment" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>API Key</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>API key for selected AI provider</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="timeout_ms" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>API Timeout (ms)</label>
+                    <validate>validate-digits validate-greater-than-zero</validate>
+                    <comment>AI API request timeout in milliseconds (default: 30000)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

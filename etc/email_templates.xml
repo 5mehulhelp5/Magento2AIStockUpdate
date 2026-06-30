@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Email template declarations
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="ai_stockpredict_alert"
+              label="StockPredict Stockout Alert"
+              file="stockpredict_alert.html"
+              type="html"
+              module="AI_StockPredict"
+              area="adminhtml"/>
+</config>

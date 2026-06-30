@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Default configuration values
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ai_stockpredict>
+            <general>
+                <enabled>1</enabled>
+                <enable_logging>1</enable_logging>
+                <retention_days>90</retention_days>
+            </general>
+            <forecasting>
+                <history_days>365</history_days>
+                <forecast_horizon>30</forecast_horizon>
+                <min_order_threshold>5</min_order_threshold>
+            </forecasting>
+            <alerts>
+                <critical_days>7</critical_days>
+                <warning_days>14</warning_days>
+                <watch_days>30</watch_days>
+                <email_enabled>0</email_enabled>
+                <email_recipient></email_recipient>
+            </alerts>
+            <ai>
+                <enabled>0</enabled>
+                <provider>gemini</provider>
+                <api_key></api_key>
+                <timeout_ms>30000</timeout_ms>
+            </ai>
+        </ai_stockpredict>
+    </default>
+</config>

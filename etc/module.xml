@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Module configuration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="AI_StockPredict">
+        <sequence>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Catalog"/>
+            <module name="Magento_Sales"/>
+            <module name="Magento_CatalogInventory"/>
+            <module name="Magento_Cron"/>
+        </sequence>
+    </module>
+</config>

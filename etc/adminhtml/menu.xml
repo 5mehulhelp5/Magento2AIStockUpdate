@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Admin menu configuration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="AI_StockPredict::stock_predict" title="Stock Predict" module="AI_StockPredict" sortOrder="77" resource="AI_StockPredict::stock_predict"/>
+        <add id="AI_StockPredict::dashboard" title="Dashboard" module="AI_StockPredict" sortOrder="10" action="stockpredict/dashboard/index" resource="AI_StockPredict::dashboard" parent="AI_StockPredict::stock_predict"/>
+        <add id="AI_StockPredict::forecasts" title="Forecasts" module="AI_StockPredict" sortOrder="20" action="stockpredict/forecasts/index" resource="AI_StockPredict::forecasts" parent="AI_StockPredict::stock_predict"/>
+        <add id="AI_StockPredict::alerts" title="Alerts" module="AI_StockPredict" sortOrder="30" action="stockpredict/alerts/index" resource="AI_StockPredict::alerts" parent="AI_StockPredict::stock_predict"/>
+        <add id="AI_StockPredict::settings" title="Settings" module="AI_StockPredict" sortOrder="40" action="adminhtml/system_config/edit/section/ai_stockpredict" resource="AI_StockPredict::config" parent="AI_StockPredict::stock_predict"/>
+    </menu>
+</config>

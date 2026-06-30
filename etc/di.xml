@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dependency injection configuration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Custom Logger: writes to var/log/ai_stockpredict.log -->
+    <virtualType name="AIStockPredictLogger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">ai_stockpredict</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">AIStockPredictLogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="AIStockPredictLogHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/ai_stockpredict.log</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Inject shared logger into all services -->
+    <type name="AI\StockPredict\Model\ForecastEngine">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="AI\StockPredict\Model\DataCollector">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="AI\StockPredict\Model\Log\LogService">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- AI Clients: inject shared logger -->
+    <type name="AI\StockPredict\Model\Ai\GeminiClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="AI\StockPredict\Model\Ai\OpenAiClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="AI\StockPredict\Model\Ai\ClaudeClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Console Commands -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="ai_stockpredict_forecast" xsi:type="object">AI\StockPredict\Console\Command\ForecastCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Inject shared logger into EmailNotifier -->
+    <type name="AI\StockPredict\Model\EmailNotifier">
+        <arguments>
+            <argument name="logger" xsi:type="object">AIStockPredictLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- UI Component Data Provider: SearchResult virtual type for forecast grid -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="stockpredict_forecast_listing_data_source" xsi:type="string">AI\StockPredict\Model\ResourceModel\Forecast\Grid\Collection</item>
+                <item name="stockpredict_alert_listing_data_source" xsi:type="string">AI\StockPredict\Model\ResourceModel\Alert\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="AI\StockPredict\Model\ResourceModel\Forecast\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable"     xsi:type="string">ai_stockpredict_forecast</argument>
+            <argument name="resourceModel" xsi:type="string">AI\StockPredict\Model\ResourceModel\Forecast</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="AI\StockPredict\Model\ResourceModel\Alert\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable"     xsi:type="string">ai_stockpredict_alert</argument>
+            <argument name="resourceModel" xsi:type="string">AI\StockPredict\Model\ResourceModel\Alert</argument>
+        </arguments>
+    </virtualType>
+
+</config>

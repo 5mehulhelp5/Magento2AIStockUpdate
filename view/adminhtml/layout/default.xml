@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Load StockPredict admin assets on every admin page
+ * (needed for the sidebar menu icon)
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="AI_StockPredict::css/admin-menu.css"/>
+    </head>
+</page>

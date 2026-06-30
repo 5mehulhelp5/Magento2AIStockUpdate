@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Forecast detail view layout
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="AI\StockPredict\Block\Adminhtml\Forecast\View"
+                   name="stockpredict.forecast.view"
+                   template="AI_StockPredict::stockpredict/forecast/view.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

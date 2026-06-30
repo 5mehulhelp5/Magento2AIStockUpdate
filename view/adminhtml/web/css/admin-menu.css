@@ -1,0 +1,12 @@
+/**
+ * StockPredict admin sidebar menu icon
+ *
+ * Uses the Magento Admin Icons font glyph \e604 (chart/analytics icon).
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+.item-stock-predict > a:before {
+    content: '\e604';
+}

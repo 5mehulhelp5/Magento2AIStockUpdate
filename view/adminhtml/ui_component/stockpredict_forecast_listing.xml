@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Forecast listing UI component
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">stockpredict_forecast_listing.stockpredict_forecast_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>stockpredict_forecast_columns</spinner>
+        <deps>
+            <dep>stockpredict_forecast_listing.stockpredict_forecast_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="stockpredict_forecast_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">forecast_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>AI_StockPredict::forecasts</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="stockpredict_forecast_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>forecast_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters">
+            <settings>
+                <sticky>true</sticky>
+            </settings>
+        </filters>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="stockpredict_forecast_columns">
+        <column name="forecast_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="sku" sortOrder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+            </settings>
+        </column>
+        <column name="product_name" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Product Name</label>
+            </settings>
+        </column>
+        <column name="severity" sortOrder="40">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Severity</label>
+                <options class="AI\StockPredict\Ui\Component\Listing\Column\SeverityOptions"/>
+            </settings>
+        </column>
+        <column name="days_until_stockout" sortOrder="50">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Days Until Stockout</label>
+            </settings>
+        </column>
+        <column name="current_qty" sortOrder="60">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Current Stock</label>
+            </settings>
+        </column>
+        <column name="forecast_demand_30d" sortOrder="70">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Forecast 30d Demand</label>
+            </settings>
+        </column>
+        <column name="trend" sortOrder="80">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Trend</label>
+            </settings>
+        </column>
+        <column name="confidence_score" sortOrder="90">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Confidence</label>
+            </settings>
+        </column>
+        <column name="predicted_stockout_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="100">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Predicted Stockout</label>
+                <dataType>date</dataType>
+            </settings>
+        </column>
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="110">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Last Updated</label>
+                <dataType>date</dataType>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="AI\StockPredict\Ui\Component\Listing\Column\ForecastActions" sortOrder="120">
+            <settings>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

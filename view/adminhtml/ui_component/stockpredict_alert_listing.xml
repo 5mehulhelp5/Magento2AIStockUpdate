@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Alert listing UI component
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">stockpredict_alert_listing.stockpredict_alert_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>stockpredict_alert_columns</spinner>
+        <deps>
+            <dep>stockpredict_alert_listing.stockpredict_alert_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="stockpredict_alert_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">alert_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>AI_StockPredict::alerts</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="stockpredict_alert_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>alert_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters">
+            <settings>
+                <sticky>true</sticky>
+            </settings>
+        </filters>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="stockpredict_alert_columns">
+        <column name="alert_id" sortOrder="10">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="sku" sortOrder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">SKU</label>
+            </settings>
+        </column>
+        <column name="product_name" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Product Name</label>
+            </settings>
+        </column>
+        <column name="severity" sortOrder="40">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Severity</label>
+                <options class="AI\StockPredict\Ui\Component\Listing\Column\SeverityOptions"/>
+            </settings>
+        </column>
+        <column name="days_until_stockout" sortOrder="50">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Days Until Stockout</label>
+            </settings>
+        </column>
+        <column name="current_qty" sortOrder="60">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Stock Qty at Alert</label>
+            </settings>
+        </column>
+        <column name="status" sortOrder="70">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Status</label>
+                <options class="AI\StockPredict\Ui\Component\Listing\Column\AlertStatusOptions"/>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="80">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Created At</label>
+                <dataType>date</dataType>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="AI\StockPredict\Ui\Component\Listing\Column\AlertActions" sortOrder="90">
+            <settings>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

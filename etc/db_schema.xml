@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Database schema declaration
+ *
+ * Magento 2 Stock prediction using AI
+ * @author Hassan Ali Shahzad
+ * email: levosoft786@gmail.com
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Forecast Table: stores per-SKU demand forecasts and stockout predictions -->
+    <table name="ai_stockpredict_forecast" resource="default" engine="innodb" comment="StockPredict SKU Forecasts">
+        <column xsi:type="int" name="forecast_id" unsigned="true" nullable="false" identity="true" comment="Forecast ID"/>
+        <column xsi:type="varchar" name="sku" nullable="false" length="64" comment="Product SKU"/>
+        <column xsi:type="varchar" name="product_name" nullable="true" length="255" comment="Product name"/>
+        <column xsi:type="decimal" name="current_qty" scale="4" precision="12" nullable="false" default="0" comment="Current stock quantity"/>
+        <column xsi:type="decimal" name="avg_daily_sales" scale="4" precision="12" nullable="false" default="0" comment="Average daily sales quantity"/>
+        <column xsi:type="decimal" name="forecast_demand_7d" scale="4" precision="12" nullable="false" default="0" comment="Forecasted demand next 7 days"/>
+        <column xsi:type="decimal" name="forecast_demand_30d" scale="4" precision="12" nullable="false" default="0" comment="Forecasted demand next 30 days"/>
+        <column xsi:type="decimal" name="forecast_demand_90d" scale="4" precision="12" nullable="false" default="0" comment="Forecasted demand next 90 days"/>
+        <column xsi:type="varchar" name="trend" nullable="false" length="20" default="stable" comment="Sales trend: rising|stable|declining"/>
+        <column xsi:type="decimal" name="confidence_score" scale="2" precision="5" nullable="false" default="0" comment="Forecast confidence score 0-1"/>
+        <column xsi:type="date" name="predicted_stockout_date" nullable="true" comment="Predicted date of stockout"/>
+        <column xsi:type="int" name="days_until_stockout" nullable="true" comment="Days until predicted stockout"/>
+        <column xsi:type="decimal" name="recommended_reorder_qty" scale="4" precision="12" nullable="true" comment="Recommended reorder quantity"/>
+        <column xsi:type="text" name="ai_recommendation" nullable="true" comment="AI-generated reorder recommendation"/>
+        <column xsi:type="varchar" name="severity" nullable="false" length="20" default="ok" comment="Alert severity: critical|warning|watch|ok"/>
+        <column xsi:type="int" name="last_30d_sales" nullable="false" default="0" comment="Total units sold in last 30 days"/>
+        <column xsi:type="int" name="last_90d_sales" nullable="false" default="0" comment="Total units sold in last 90 days"/>
+        <column xsi:type="int" name="last_365d_sales" nullable="false" default="0" comment="Total units sold in last 365 days"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="forecast_id"/>
+        </constraint>
+        <index referenceId="AI_STOCKPREDICT_FORECAST_SKU" indexType="btree">
+            <column name="sku"/>
+        </index>
+        <index referenceId="AI_STOCKPREDICT_FORECAST_SEVERITY" indexType="btree">
+            <column name="severity"/>
+        </index>
+        <index referenceId="AI_STOCKPREDICT_FORECAST_STOCKOUT_DATE" indexType="btree">
+            <column name="predicted_stockout_date"/>
+        </index>
+        <index referenceId="AI_STOCKPREDICT_FORECAST_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
+    <!-- Alert Table: stores stockout alert records per SKU -->
+    <table name="ai_stockpredict_alert" resource="default" engine="innodb" comment="StockPredict Stockout Alerts">
+        <column xsi:type="int" name="alert_id" unsigned="true" nullable="false" identity="true" comment="Alert ID"/>
+        <column xsi:type="int" name="forecast_id" unsigned="true" nullable="true" comment="Related forecast ID"/>
+        <column xsi:type="varchar" name="sku" nullable="false" length="64" comment="Product SKU"/>
+        <column xsi:type="varchar" name="product_name" nullable="true" length="255" comment="Product name"/>
+        <column xsi:type="varchar" name="severity" nullable="false" length="20" comment="Alert severity: critical|warning|watch"/>
+        <column xsi:type="int" name="days_until_stockout" nullable="true" comment="Days until predicted stockout"/>
+        <column xsi:type="decimal" name="current_qty" scale="4" precision="12" nullable="false" default="0" comment="Current stock quantity at alert time"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="open" comment="Alert status: open|acknowledged|resolved"/>
+        <column xsi:type="timestamp" name="notified_at" nullable="true" comment="Email notification sent at"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="alert_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="AI_STOCKPREDICT_ALERT_FORECAST_ID" table="ai_stockpredict_alert" column="forecast_id" referenceTable="ai_stockpredict_forecast" referenceColumn="forecast_id" onDelete="SET NULL"/>
+        <index referenceId="AI_STOCKPREDICT_ALERT_SKU" indexType="btree">
+            <column name="sku"/>
+        </index>
+        <index referenceId="AI_STOCKPREDICT_ALERT_SEVERITY" indexType="btree">
+            <column name="severity"/>
+        </index>
+        <index referenceId="AI_STOCKPREDICT_ALERT_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+
+    <!-- Run Table: tracks each forecast execution -->
+    <table name="ai_stockpredict_run" resource="default" engine="innodb" comment="StockPredict Forecast Runs">
+        <column xsi:type="int" name="run_id" unsigned="true" nullable="false" identity="true" comment="Run ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="pending" comment="Run status: pending|running|completed|failed"/>
+        <column xsi:type="int" name="skus_analyzed" nullable="false" default="0" comment="Number of SKUs analyzed"/>
+        <column xsi:type="int" name="skus_critical" nullable="false" default="0" comment="Number of SKUs with critical severity"/>
+        <column xsi:type="int" name="skus_warning" nullable="false" default="0" comment="Number of SKUs with warning severity"/>
+        <column xsi:type="int" name="skus_watch" nullable="false" default="0" comment="Number of SKUs with watch severity"/>
+        <column xsi:type="int" name="duration_ms" nullable="true" comment="Run duration in milliseconds"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error message if run failed"/>
+        <column xsi:type="varchar" name="triggered_by" nullable="false" length="50" default="cron" comment="Trigger source: cron|cli|admin"/>
+        <column xsi:type="timestamp" name="started_at" nullable="true" comment="Run started at"/>
+        <column xsi:type="timestamp" name="completed_at" nullable="true" comment="Run completed at"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="run_id"/>
+        </constraint>
+    </table>
+
+</schema>
